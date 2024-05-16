@@ -1,0 +1,57 @@
+{
+  "expo": {
+    "name": "CarTrafficMania",
+    "scheme": "CarTrafficMania",
+    "slug": "CarTrafficMania",
+    "version": "1.0.0",
+    "orientation": "portrait",
+    "icon": "./assets/icon.png",
+    "userInterfaceStyle": "light",
+    "splash": {
+      "image": "./assets/splash.png",
+      "resizeMode": "contain",
+      "backgroundColor": "#ffffff"
+    },
+    "assetBundlePatterns": [
+      "**/*"
+    ],
+    "ios": {
+      "supportsTablet": true,
+      "bundleIdentifier": "com.CarTrafficMania.CarTrafficMania",
+      "infoPlist": {
+        "CFBundleURLTypes": [
+          {
+            "CFBundleURLSchemes": ["CarTrafficMania"]
+          }
+        ]
+      }
+    },
+    "android": {
+      "package": "com.CarTrafficMania.CarTrafficMania",
+      "intentFilters": [
+        {
+          "action": "VIEW",
+          "autoVerify": true,
+          "data": [
+            {
+              "scheme": "https",
+              "host": "CarTrafficMania.CarTrafficMania.com",
+              "pathPrefix": "/records"
+            },
+            {
+              "scheme": "CarTrafficMania"
+            }
+          ],
+          "category": ["BROWSABLE", "DEFAULT"]
+        }
+      ],
+      "adaptiveIcon": {
+        "foregroundImage": "./assets/adaptive-icon.png",
+        "backgroundColor": "#ffffff"
+      }
+    },
+    "web": {
+      "favicon": "./assets/favicon.png"
+    }
+  }
+}
