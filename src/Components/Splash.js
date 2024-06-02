@@ -50,7 +50,7 @@ const Splash = ({ navigation }) => {
   const storeGuestId = async (guestId) => {
     try {
       await AsyncStorage.setItem("guestId", guestId);
-      navigation.navigate("Home", { guestId: guestId, isGmailPage: false });
+      navigation.navigate("Home", { isGmailPage: false });
     } catch (error) {
       setAlertText("Something Went Wrong");
       setShowAlert(true);
@@ -68,8 +68,9 @@ const Splash = ({ navigation }) => {
   }, []);
 
   useEffect(() => {
-    if (guestSignInSuccess) {
-      storeGuestId(guestSignInData.user.guestId);
+    if (guestSignInSuccess  && guestSignInData) {
+      console.log(guestSignInData.user.guestId,'guest signin data')
+      storeGuestId(guestSignInData?.user.guestId);
     }
     if (guestSignInError) {
       setAlertText("Something Went Wrong");

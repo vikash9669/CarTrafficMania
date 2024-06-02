@@ -1,5 +1,7 @@
 import React, { useState, useEffect } from "react";
-import { Audio } from 'expo-av';
+import Setting from "./Setting";
+import { useMute } from "../../MuteContext";
+import AsyncStorage from '@react-native-async-storage/async-storage';
 import {
   View,
   ImageBackground,
@@ -7,29 +9,61 @@ import {
   TouchableOpacity,
   Image,
   BackHandler,
+  Linking,
 } from "react-native";
 
 
 const Home = ({ navigation, route }) => {
-  const guestId = route.params.guestId;
+  const [guestId, setGuestId] = useState('')
   const isGmailPage = route.params.isGmailPage;
-  const [sound, setSound] = useState(null);
+  const {isMuted, setIsMuted} = useMute();
+  const [openSettings, setOpenSettings] = useState(false);
 
   const navigateToProfile = () => {
-    navigation.navigate("Profile", { guestId: guestId, isGamilPage: isGmailPage });
+    navigation.navigate("Profile", { isGmailPage: isGmailPage });
   };
   const navigateToScore = () => {
     navigation.navigate("Score", { guestId: guestId });
   };
-  const navigateToSetting = () => {
-    navigation.navigate("Setting", { guestId: guestId });
+  const navigateToSplash = () => {
+    navigation.navigate("Splash");
   };
+
   const navigateToGame = () => {
-    navigation.navigate("Game", { guestId: guestId });
+    navigation.navigate("Game", { isMuted: isMuted, setIsMuted:setIsMuted });
   };
-  const navigateToWebLink = () => {
-    console.log("Navigating to WebLink");
+  const navigateToAgnitoGames = () => {
+    Linking.openURL("https://play.google.com/store/apps/details?id=com.company.zingaat")
+    .catch(err => console.error("Failed to open URL:", err));
   };
+
+useEffect(() => {
+  const storeGuestId = async (guestId) => {
+    try {
+      await AsyncStorage.setItem('guestId', guestId);
+      setGuestId(guestId);
+    } catch (error) {
+      console.error('Error storing guest ID:', error);
+    }
+  };
+  storeGuestId(route.params.guestId);
+  const retrieveGuestId = async () => {
+    try {
+      const guestId = await AsyncStorage.getItem("guestId");
+      if (guestId !== null) {
+        setGuestId(guestId)
+        console.log("Retrieved guest ID:", guestId);
+      } else {
+        // No guest ID found
+        console.log("No guest ID stored.");
+      }
+    } catch (error) {
+      console.error("Error retrieving guest ID:", error);
+    }
+  };
+
+  retrieveGuestId();
+},[]);
 
   useEffect(() => {
     const backAction = () => {
@@ -47,29 +81,18 @@ const Home = ({ navigation, route }) => {
     return () => backHandler.remove();
   }, []);
 
-  useEffect(() => {
-    let soundObject;
+  
 
-    const loadSound = async () => {
-      soundObject = new Audio.Sound();
-      try {
-        await soundObject.loadAsync(require('../../assets/backgroundMusic.mp3'));
-        await soundObject.setIsLoopingAsync(true);
-        await soundObject.playAsync();
-        setSound(soundObject);
-      } catch (error) {
-        console.error('Error loading sound', error);
-      }
-    };
-
-    loadSound();
-
-    return () => {
-      if (soundObject) {
-        soundObject.unloadAsync();
-      }
-    };
-  }, []);
+ // Toggle the mute status
+ const toggleMute = async () => {
+   console.log("toggle music")
+  const newMuteStatus = !isMuted;
+  setIsMuted(newMuteStatus);
+  await AsyncStorage.setItem('isMuted', newMuteStatus.toString());
+};
+const handleSettings = () => {
+setOpenSettings(prevState => !prevState);
+};
 
   return (
     <View style={styles.container}>
@@ -118,7 +141,7 @@ const Home = ({ navigation, route }) => {
             />
           </TouchableOpacity>
           <TouchableOpacity
-            onPress={navigateToWebLink}
+            onPress={navigateToAgnitoGames}
             style={styles.Settingicon}
           >
             <Image
@@ -126,12 +149,13 @@ const Home = ({ navigation, route }) => {
               style={styles.SettingiconImage}
             />
           </TouchableOpacity>
-          <TouchableOpacity onPress={navigateToSetting} style={styles.Setting2}>
+          <TouchableOpacity onPress={handleSettings} style={styles.Setting2}>
             <Image
               source={require("../../assets/img/Setting2.png")}
               style={styles.Setting2Image}
             />
           </TouchableOpacity>
+          {openSettings && <Setting toggleMute={toggleMute} isMuted={isMuted} navigateToSplash = {navigateToSplash}  handleSettings={handleSettings} />}
         </View>
       </ImageBackground>
     </View>

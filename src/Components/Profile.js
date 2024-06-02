@@ -17,12 +17,9 @@ import { useSelector, useDispatch } from "react-redux";
 
 const Profile = ({ navigation, route }) => {
   const dispatch = useDispatch();
-  const [guestId, setGuestId] = useState(route.params.guestId);
+  const [guestId, setGuestId] = useState('');
   const isGmailPage = route.params.isGmailPage;
-  const { guestSignInSuccess } = useSelector((state) => state.game);
-  const { emailSignInData, emailSignInSuccess } = useSelector(
-    (state) => state.game
-  );
+  console.log(isGmailPage,'checking is gmail page')
   const {
     updateGuestNameLoading,
     updateGuestNameSuccess,
@@ -39,8 +36,9 @@ const Profile = ({ navigation, route }) => {
   const retrieveGuestId = async () => {
     try {
       const guestId = await AsyncStorage.getItem("guestId");
+      console.log("Retrieved guest ID in profile page:", guestId);
       if (guestId !== null) {
-        setUser(guestId.slice(0, 15));
+        setGuestId(guestId);
         console.log("Retrieved guest ID:", guestId);
       } else {
         // No guest ID found
@@ -50,22 +48,37 @@ const Profile = ({ navigation, route }) => {
       console.error("Error retrieving guest ID:", error);
     }
   };
+ 
   useEffect(()=>{
     retrieveGuestId();
   },[]);
 
-  useEffect(() => {
-    setUser(guestId.slice(0, 15));
-    if (updateGuestNameSuccess) {
-      setGuestId(updateGuestNameData.guestId);
-      setUser(updateGuestNameData.guestId.slice(0, 15));
-    } else if (emailSignInSuccess) {
-      setUser(emailSignInData.email);
-    } else if (guestSignInSuccess) {
-      setUser(guestId.slice(0, 15));
-    } else {
-      setUser(null);
+  const storeGuestId = async (guestId) => {
+    try {
+      await AsyncStorage.setItem("guestId", guestId);
+
+    } catch (error) {
+      setAlertText("Something Went Wrong");
+      setShowAlert(true);
+      console.error("Error storing guest ID:", error);
     }
+  };
+  useEffect(() => {
+    if(updateGuestNameData?.guestId){
+    storeGuestId(updateGuestNameData?.guestId);
+    }
+    setGuestId(updateGuestNameData?.guestId);
+    // setGuestId(guestId?.slice(0, 15));
+    // if (updateGuestNameSuccess) {
+    //   setGuestId(updateGuestNameData.guestId);
+    //   setUser(updateGuestNameData.guestId?.slice(0, 15));
+    // } else if (emailSignInSuccess) {
+    //   setUser(emailSignInData.email);
+    // } else if (guestSignInSuccess) {
+    //   setUser(guestId?.slice(0, 15));
+    // } else {
+    //   setUser(null);
+    // }
   }, [updateGuestNameSuccess]);
   const navigateToHome = () => {
     navigation.navigate("Home", { guestId: user });
@@ -77,8 +90,10 @@ const Profile = ({ navigation, route }) => {
   };
 
   useEffect(() =>{
+    if(updateGuestNameError !== null){
     setAlertText("Something Went Wrong");
     setShowAlert(true);
+    }
   },[updateGuestNameError])
 
   const handleEdit = () => {
@@ -117,7 +132,8 @@ const Profile = ({ navigation, route }) => {
                 source={require("../../assets/img/Black12.png")}
                 style={styles.Delete1}
               />
-              <Text style={styles.userText}>{`${user}`}</Text>
+              {/* <Text style={styles.userText}>{`${guestId}`}</Text> */}
+              <Text style={styles.userText}>{guestId?.length > 15 ? `${guestId.slice(0, 15)}...` : guestId}</Text>
             </>
           )}
           {updateGuestNameLoading && (

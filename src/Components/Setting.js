@@ -4,8 +4,10 @@ import { useSelector, useDispatch } from "react-redux";
 import {deleteGuestAccount} from '../Features/gameSlice'
 import AsyncStorage from '@react-native-async-storage/async-storage';
 
-const Setting = ({navigation, route}) => {
-  const guestId = route.params.guestId;
+const Setting = ({navigateToSplash, toggleMute, handleSettings, isMuted }) => {
+  // const guestId = route.params.guestId;
+  // const { guestId, toggleMute } = route.params;
+  const [guestId, setGuestId] = useState('');
   const [showAlert, setShowAlert] = useState(false);
   const [alertText, setAlertText] = useState('');
   const dispatch = useDispatch();
@@ -24,29 +26,46 @@ const Setting = ({navigation, route}) => {
     dispatch(deleteGuestAccount({ guestId: guestId }))
     };
 
-  const muteMusic = () => {
-   console.log("music muted")
-  };
-  const navigateToHome = () => {
-    navigation.navigate("Home", { guestId: guestId });
-  };
-
   const clearGuestId = async () => {
     try {
       await AsyncStorage.removeItem('guestId');
+      // navigation.navigate("Splash");
+      navigateToSplash();
       console.log('Guest ID cleared.');
-      navigation.navigate("Splash");
     } catch (error) {
       console.error('Error clearing guest ID:', error);
     }
+
   };
   const closeModel = () => {
     // Reset the game state if needed
     setShowAlert(false);
    
   };
+
+  const retrieveGuestId = async () => {
+    try {
+      const guestId = await AsyncStorage.getItem("guestId");
+      console.log("Retrieved guest ID in profile page:", guestId);
+      if (guestId !== null) {
+        setGuestId(guestId);
+        console.log("Retrieved guest ID:", guestId);
+      } else {
+        // No guest ID found
+        console.log("No guest ID stored.");
+      }
+    } catch (error) {
+      console.error("Error retrieving guest ID:", error);
+    }
+  };
+ 
+  useEffect(()=>{
+    retrieveGuestId();
+  },[]);
+
   useEffect(()=>{
   if(deleteEmailAccountSuccess || deleteGuestAccountSuccess){
+    // clearHighScore();
     clearGuestId();
   }
   if(deleteGuestAccountError){
@@ -92,14 +111,14 @@ const Setting = ({navigation, route}) => {
               style={styles.Delete1}
             />
           </TouchableOpacity>
-          <TouchableOpacity onPress={muteMusic}>
+          <TouchableOpacity onPress={toggleMute}>
             <Image
-              source={require('../../assets/img/Mute12.png')}
+              source={!isMuted?require('../../assets/img/Mute12.png'):require('../../assets/img/unmute.png')}
               style={styles.Mute2}
             />
           </TouchableOpacity> 
          
-          <TouchableOpacity onPress={navigateToHome}>
+          <TouchableOpacity onPress={handleSettings}>
             <Image
               source={require('../../assets/img/Back12.png')}
               style={styles.Setting2Image}

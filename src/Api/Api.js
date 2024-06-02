@@ -1,10 +1,12 @@
 import axios from "axios";
+import {API_URL} from "@env"
 
-const apiUrl = "https://e5d2-122-168-138-164.ngrok-free.app/";
-const guestSignInApi = async (data) => {
-  console.log("guest api hit", data, apiUrl);
+const apiUrl = `${API_URL}`;
+
+const guestSignInApi = async () => {
+  console.log("guest api hit", apiUrl);
   const response = await axios
-    .post(`${apiUrl}api/guest/guestid`, data)
+    .post(`${apiUrl}api/guest/guestid`)
     .then((res) => {
       console.log("response", res);
       return res.data;

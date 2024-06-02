@@ -1,11 +1,12 @@
 {
   "expo": {
-    "name": "CarTrafficMania",
-    "scheme": "CarTrafficMania",
+    "name": "cartrafficmania",
+    "scheme": "cartrafficmania",
+    "platforms": ["ios", "android"],
     "slug": "CarTrafficMania",
     "version": "1.0.0",
     "orientation": "portrait",
-    "icon": "./assets/icon.png",
+    "icon": "./assets/logo.png",
     "userInterfaceStyle": "light",
     "splash": {
       "image": "./assets/splash.png",
@@ -17,17 +18,19 @@
     ],
     "ios": {
       "supportsTablet": true,
-      "bundleIdentifier": "com.CarTrafficMania.CarTrafficMania",
+      "bundleIdentifier": "com.cartrafficmania.game",
       "infoPlist": {
         "CFBundleURLTypes": [
           {
-            "CFBundleURLSchemes": ["CarTrafficMania"]
+            "CFBundleURLSchemes": [
+              "cartrafficmania"
+            ]
           }
         ]
       }
     },
     "android": {
-      "package": "com.CarTrafficMania.CarTrafficMania",
+      "package": "com.cartrafficmania.game",
       "intentFilters": [
         {
           "action": "VIEW",
@@ -35,23 +38,31 @@
           "data": [
             {
               "scheme": "https",
-              "host": "CarTrafficMania.CarTrafficMania.com",
+              "host": "game.cartrafficmania.com",
               "pathPrefix": "/records"
             },
             {
-              "scheme": "CarTrafficMania"
+              "scheme": "cartrafficmania"
             }
           ],
-          "category": ["BROWSABLE", "DEFAULT"]
+          "category": [
+            "BROWSABLE",
+            "DEFAULT"
+          ]
         }
       ],
       "adaptiveIcon": {
-        "foregroundImage": "./assets/adaptive-icon.png",
+        "foregroundImage": "./assets/logo.png",
         "backgroundColor": "#ffffff"
       }
     },
     "web": {
       "favicon": "./assets/favicon.png"
+    },
+    "extra": {
+      "eas": {
+        "projectId": "a7c68843-f9d5-448a-a562-dc852c710103"
+      }
     }
   }
 }

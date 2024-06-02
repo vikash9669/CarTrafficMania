@@ -10,9 +10,9 @@ import {
 
 export const signInAsGuest = createAsyncThunk(
   "guest/signInAsGuest",
-  async (body, thunkAPI) => {
+  async ( thunkAPI) => {
     try {
-      const response = await guestSignInApi(body);
+      const response = await guestSignInApi();
       return response;
     } catch (error) {
       return thunkAPI.rejectWithValue(error.response);
@@ -157,6 +157,9 @@ export const gameSlice = createSlice({
         state.guestSignInLoading = false;
         state.guestSignInData = action.payload;
         state.guestSignInSuccess = true;
+        state.deleteGuestAccountSuccess = false;
+        state.deleteEmailAccountSuccess = false;
+
       })
       .addCase(signInAsGuest.rejected, (state, action) => {
         state.guestSignInLoading = false;

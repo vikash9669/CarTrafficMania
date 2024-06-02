@@ -28,11 +28,7 @@ const Score = ({navigation, route}) => {
 
   useEffect(() => {
     retrieveScore();
-    if(gameOverSuccess){
-      setScore(gameOverData.score);
-    }else {
-      setScore("00");
-    }
+   
   }, []);
 
   const navigateToHome = () => {

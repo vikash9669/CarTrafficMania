@@ -19,6 +19,7 @@ import CheckBox from "react-native-check-box";
 import { useDispatch, useSelector } from "react-redux";
 import { signInWithEmail } from "../Features/gameSlice";
 import AsyncStorage from '@react-native-async-storage/async-storage';
+import * as FileSystem from 'expo-file-system';
 
 const GmailSignIn = ({ navigation }) => {
   const [isChecked, setIsChecked] = useState(true);
@@ -57,6 +58,10 @@ const GmailSignIn = ({ navigation }) => {
     };
   }, []);
 
+  useEffect(() => {
+    
+  },[]);
+
   const handleEmailPress = () => {
     setFlip(!flip);
     if (inputRef.current) {
@@ -68,20 +73,31 @@ const GmailSignIn = ({ navigation }) => {
     if (isChecked) {
       dispatch(signInWithEmail({ email: email, checkboxValue: isChecked }));
     }
-    navigation.navigate("Home", { guestId: emailSignInData.guestId, isGamilPage: true });
+    // navigation.navigate("Home", { isGmailPage: true });
   };
   
   const storeGuestId = async (guestId) => {
     try {
       await AsyncStorage.setItem('guestId', guestId);
-      navigation.navigate("Home", { guestId: guestId, isGamilPage: true });
+      navigation.navigate("Home", { isGmailPage: true });
     } catch (error) {
       console.error('Error storing guest ID:', error);
     }
   };
-  const openPrivacyPolicy = () => {
-    const url = "../../assets/privacy and policy.pdf"; // Replace with your PDF URL
-    Linking.openURL(url);
+  const openPrivacyPolicy = async () => {
+    try {
+      // 1. Load PDF from Assets
+      const localUri = await FileSystem.downloadAsync(
+        require('../../assets/privacyandpolicy.pdf'),
+        FileSystem.documentDirectory + 'privacy_and_policy.pdf'
+      );
+
+      // 2. Open PDF in Browser (or default PDF viewer)
+      await Linking.openURL(localUri.uri);
+    } catch (error) {
+      console.error('Error opening PDF:', error);
+      // Consider showing an error message to the user
+    }
   };
   const closeModel = () => {
     // Reset the game state if needed
