@@ -1,7 +1,7 @@
 {
   "expo": {
-    "name": "cartrafficmania",
-    "scheme": "cartrafficmania",
+    "name": "CarTrafficMania",
+    "scheme": "CarTrafficMania",
     "platforms": ["ios", "android"],
     "slug": "CarTrafficMania",
     "version": "1.0.0",
@@ -14,23 +14,23 @@
       "backgroundColor": "#ffffff"
     },
     "assetBundlePatterns": [
-      "**/*"
+      "**/*" 
     ],
     "ios": {
       "supportsTablet": true,
-      "bundleIdentifier": "com.cartrafficmania.game",
+      "bundleIdentifier": "com.CarTrafficMania.game",
       "infoPlist": {
         "CFBundleURLTypes": [
           {
             "CFBundleURLSchemes": [
-              "cartrafficmania"
+              "CarTrafficMania"
             ]
           }
         ]
       }
     },
     "android": {
-      "package": "com.cartrafficmania.game",
+      "package": "com.CarTrafficMania.game",
       "intentFilters": [
         {
           "action": "VIEW",
@@ -38,11 +38,11 @@
           "data": [
             {
               "scheme": "https",
-              "host": "game.cartrafficmania.com",
+              "host": "game.CarTrafficMania.com",
               "pathPrefix": "/records"
             },
             {
-              "scheme": "cartrafficmania"
+              "scheme": "CarTrafficMania"
             }
           ],
           "category": [

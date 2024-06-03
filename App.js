@@ -22,10 +22,10 @@ const prefix = Linking.createURL("/");
 
 const App = ({ navigation }) => {
   const linking = {
-    prefixes: [prefix, "https://game.CarTrafficMania.com"],
+    prefixes: ["https://game.CarTrafficMania.com", prefix],
     config: {
       screens: {
-        Home: "home",
+        Home: "Home",
       },
     },
   };
